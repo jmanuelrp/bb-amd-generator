@@ -1,0 +1,42 @@
+{
+  "name": "grunt-bb_pep_generate",
+  "description": "The best Grunt plugin ever.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jmanuelrp/bb_pep_amdtemplates",
+  "author": {
+    "name": "JManuel Ruiz",
+    "email": "metalfranckie@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jmanuelrp/bb_pep_amdtemplates.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jmanuelrp/bb_pep_amdtemplates/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jmanuelrp/bb_pep_amdtemplates/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.1"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
