@@ -22,7 +22,7 @@ module.exports = function(grunt) {
         { tplname: 'collection.js' ,extension: '.js'   ,name: 'collection' },
         { tplname: 'router.js'     ,extension: '.js'   ,name: 'router'     },
         { tplname: 'module.js'     ,extension: '.js'   ,name: 'module'     },
-        { tplname: 'template.js'   ,extension: '.html' ,name: 'template'   }
+        { tplname: 'template.html' ,extension: '.html' ,name: 'template'   }
       ];
 
       var _get = function(name) {
