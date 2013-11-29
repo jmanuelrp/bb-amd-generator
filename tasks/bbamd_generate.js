@@ -1,6 +1,6 @@
 /*
- * grunt-bb_pep_generate
- * https://github.com/jmanuelrp/bb_pep_amdtemplates
+ * grunt-bbamd_generate
+ * https://github.com/jmanuelrp/bb-amd-generator
  *
  * Copyright (c) 2013 JManuel Ruiz
  * Licensed under the MIT license.
@@ -14,9 +14,9 @@ var pluralize = require('pluralize');
 
 module.exports = function(grunt) {
 
-  grunt.registerMultiTask('pep_generate', 'Backbone AMD generator.', function( name ) {
+  grunt.registerMultiTask('bbamd_generate', 'Backbone AMD generator.', function( name ) {
 
-    var options = this.options({ source: 'app/js/backbone', mixins: false, setAMDName: true });
+    var options = this.options({ source: 'js/backbone', mixins: false, setAMDName: true });
 
     var elements = (function() {
       var elements = [

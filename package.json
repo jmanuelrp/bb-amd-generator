@@ -1,23 +1,23 @@
 {
-  "name": "grunt-bb_pep_generate",
+  "name": "grunt-bbamd_generate",
   "description": "The best Grunt plugin ever.",
   "version": "0.1.0",
-  "homepage": "https://github.com/jmanuelrp/bb_pep_amdtemplates",
+  "homepage": "https://github.com/jmanuelrp/bb-amd-generator",
   "author": {
     "name": "JManuel Ruiz",
     "email": "metalfranckie@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:jmanuelrp/bb_pep_amdtemplates.git"
+    "url": "git@github.com:jmanuelrp/bb-amd-generator.git"
   },
   "bugs": {
-    "url": "https://github.com/jmanuelrp/bb_pep_amdtemplates/issues"
+    "url": "https://github.com/jmanuelrp/bb-amd-generator/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/jmanuelrp/bb_pep_amdtemplates/blob/master/LICENSE-MIT"
+      "url": "https://github.com/jmanuelrp/bb-amd-generator/blob/master/LICENSE-MIT"
     }
   ],
   "main": "Gruntfile.js",

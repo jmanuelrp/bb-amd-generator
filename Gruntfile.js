@@ -1,6 +1,6 @@
 /*
- * grunt-bb_pep_generate
- * https://github.com/jmanuelrp/bb_pep_amdtemplates
+ * grunt-bbamd_generate
+ * https://github.com/jmanuelrp/bb-amd-generator
  *
  * Copyright (c) 2013 JManuel Ruiz
  * Licensed under the MIT license.
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
     },
 
     // Configuration to be run (and then tested).
-    bb_pep_generate: {
+    bbamd_generate: {
       default_options: {
         options: {
         },
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'bb_pep_generate', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'bbamd_generate', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
