@@ -8,21 +8,24 @@
 
 'use strict';
 
+var path      = require('path'     );
+var swig      = require('swig'     );
+var pluralize = require('pluralize');
 
 module.exports = function(grunt) {
 
-  grunt.registerMultiTask('bb_pep_generate', 'The best Grunt plugin ever.', function( name ) {
+  grunt.registerMultiTask('pep_generate', 'Backbone AMD generator.', function( name ) {
 
-    var options = this.options({ source: 'app/js/backbone' });
+    var options = this.options({ source: 'app/js/backbone', mixins: false, setAMDName: true });
 
     var elements = (function() {
       var elements = [
-        { tplname: 'view.js'       ,extension: '.js'   ,name: 'view'       },
-        { tplname: 'model.js'      ,extension: '.js'   ,name: 'model'      },
-        { tplname: 'collection.js' ,extension: '.js'   ,name: 'collection' },
-        { tplname: 'router.js'     ,extension: '.js'   ,name: 'router'     },
-        { tplname: 'module.js'     ,extension: '.js'   ,name: 'module'     },
-        { tplname: 'template.html' ,extension: '.html' ,name: 'template'   }
+        { tplname: 'view.swig'       ,extension: '.js'   ,name: 'view'       },
+        { tplname: 'model.swig'      ,extension: '.js'   ,name: 'model'      },
+        { tplname: 'collection.swig' ,extension: '.js'   ,name: 'collection' },
+        { tplname: 'router.swig'     ,extension: '.js'   ,name: 'router'     },
+        { tplname: 'module.swig'     ,extension: '.js'   ,name: 'module'     },
+        { tplname: 'template.swig'   ,extension: '.swig' ,name: 'template'   }
       ];
 
       var _get = function(name) {
@@ -54,31 +57,35 @@ module.exports = function(grunt) {
     var ElementCreator = function (el, options) {
       var template, tplpath;
 
-      tplpath  = __dirname + '/../templates/' + el.tplname;
+      tplpath  = path.join(__dirname,'../templates', el.tplname);
       template = grunt.file.read( tplpath );
 
       return {
         make: function( name ) {
+          var filepath, content, message, data;
+
           if( typeof name === 'undefined' ){
-            grunt.fail.warn('the name has not been specified.');
-            // return grunt.log.error('Missing name.');
+            grunt.fail.warn('The name has not been specified.');
             name = 'name';
           }
-          // BUG: Incluir pluralizacion
-          var filepath = options.source +'/'+ el.name +'s/'+ name + el.extension;
+
+          filepath = path.join(
+            options.source,
+            pluralize(el.name),
+            name+el.extension
+          );
 
           if( grunt.file.exists(filepath) ){
             grunt.fail.warn('File already exists ('+ filepath +').');
           }
-
-          var content, message, data;
 
           data = {
             name: name,
             options: options
           };
  
-          content = grunt.template.process(template, { data:data });
+          content = swig.render(template, { locals:data });
+
           grunt.file.write(filepath, content);
 
           message = 'Great! '+ name +' '+ el.name +' has been created ('+ filepath +').';
@@ -87,10 +94,6 @@ module.exports = function(grunt) {
         }
       };
     };
-
-    if (!elements.has(this.target)) {
-      grunt.fail.fatal('Missing arguments');
-    }
 
     var f = new ElementCreator(elements.get(this.target), options);
     f.make( name );
