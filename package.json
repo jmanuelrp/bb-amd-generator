@@ -27,6 +27,11 @@
   "scripts": {
     "test": "grunt test"
   },
+  "dependencies": {
+    "path": "0.4.9",
+    "swig": "1.1.0",
+    "pluralize": "0.0.5"
+  },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-clean": "~0.4.0",
