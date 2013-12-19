@@ -23,7 +23,7 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		// mixins
 		/* Mixins.Name, */ {
 
-		// model properties {% else %}{{'{'}}{% endif %}
+		// collection properties {% else %}{{'{'}}{% endif %}
 		url: '',
 		model: {{ name|capitalize }}.Model
 	}{% if _mix_ %}){% endif %});
@@ -32,7 +32,7 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		// mixins
 		/* Mixins.Name, */ {
 
-		// model properties {% else %}{{'{'}}{% endif %}
+		// view properties {% else %}{{'{'}}{% endif %}
 		events: {},
 		initialize: function() {},
 		render: function() {
@@ -44,9 +44,9 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		// mixins
 		/* Mixins.Name, */ {
 
-		// model properties {% else %}{{'{'}}{% endif %}
+		// view properties {% else %}{{'{'}}{% endif %}
 		initialize: function(options) {
-			this.collection.on('reset',this.render,this);
+			this. .on('reset',this.render,this);
 			this.collection.on('add',this.add,this);
 		},
 		render: function() {

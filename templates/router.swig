@@ -1,11 +1,12 @@
 define({% if options.setAMDName %}'routers/{{ name }}',{% endif %}[
 	'{{ options.appname }}',
+	'underscore',
 	'backbone'
 ],
 
-function({{ options.appname }}, Backbone){
+function({{ options.appname }}, _, Backbone){
 
-	var {{ name|capitalize }} = Backbone.Router.extend({
+	var {{ name|capitalize }}Router = Backbone.Router.extend({
 		routes: {
 			"" :  "index"
 		},
@@ -13,5 +14,5 @@ function({{ options.appname }}, Backbone){
 		index: function() {}
 	});
 
-	return {{ name|capitalize }};
+	return {{ name|capitalize }}Router;
 });

@@ -9,7 +9,7 @@ define({% if options.setAMDName %}'collections/{{ name }}',{% endif %}[
 
 function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone, {{ name|capitalize }}Model{% if _mix_ %}, Mixins{% endif %}){
 
-	var {{ name|capitalize }} = Backbone.Collection.extend({% if _mix_ %}_.extend({},
+	var {{ name|capitalize }}Collection = Backbone.Collection.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
@@ -18,5 +18,5 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone, {{ name|ca
 		model: {{ name|capitalize }}Model
 	}{% if _mix_ %}){% endif %});
 
-	return {{ name|capitalize }};
+	return {{ name|capitalize }}Collection;
 });

@@ -116,7 +116,7 @@ function(app, _, Backbone, Mixins){
     // mixins
     /* Mixins.Name, */ {
 
-    // model properties 
+    // collection properties 
     url: '',
     model: Post.Model
   }));
@@ -125,7 +125,7 @@ function(app, _, Backbone, Mixins){
     // mixins
     /* Mixins.Name, */ {
 
-    // model properties 
+    // view properties 
     events: {},
     initialize: function() {},
     render: function() {
@@ -137,7 +137,7 @@ function(app, _, Backbone, Mixins){
     // mixins
     /* Mixins.Name, */ {
 
-    // model properties 
+    // view properties 
     initialize: function(options) {
       this.collection.on('reset',this.render,this);
       this.collection.on('add',this.add,this);
