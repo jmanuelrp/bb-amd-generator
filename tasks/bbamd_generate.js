@@ -11,6 +11,11 @@
 var path      = require('path'     );
 var swig      = require('swig'     );
 var pluralize = require('pluralize');
+var morph     = require('morph');
+
+swig.setFilter('upperCamel', function(input) {
+  return morph.toUpperCamel(input);
+});
 
 module.exports = function(grunt) {
 

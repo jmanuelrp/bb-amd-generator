@@ -8,7 +8,7 @@ define({% if options.setAMDName %}'models/{{ name }}',{% endif %}[
 
 function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ %}, Mixins{% endif %}){
 
-	var {{ name|capitalize }}Model = Backbone.Model.extend({% if _mix_ %}_.extend({},
+	var {{ name|upperCamel }}Model = Backbone.Model.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
@@ -17,5 +17,5 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		defaults: {}
 	}{% if _mix_ %}){% endif %});
 
-	return {{ name|capitalize }}Model;
+	return {{ name|upperCamel }}Model;
 });

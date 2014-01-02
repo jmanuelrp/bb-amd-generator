@@ -7,16 +7,16 @@ define({% if options.setAMDName %}'collections/{{ name }}',{% endif %}[
 	'mixins'{% endif %}
 ],
 
-function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone, {{ name|capitalize }}Model{% if _mix_ %}, Mixins{% endif %}){
+function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone, {{ name|upperCamel }}Model{% if _mix_ %}, Mixins{% endif %}){
 
-	var {{ name|capitalize }}Collection = Backbone.Collection.extend({% if _mix_ %}_.extend({},
+	var {{ name|upperCamel }}Collection = Backbone.Collection.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
 		// collection properties {% else %}{{'{'}}{% endif %}
 		url: '',
-		model: {{ name|capitalize }}Model
+		model: {{ name|upperCamel }}Model
 	}{% if _mix_ %}){% endif %});
 
-	return {{ name|capitalize }}Collection;
+	return {{ name|upperCamel }}Collection;
 });

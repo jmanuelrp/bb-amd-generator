@@ -8,9 +8,9 @@ define({% if options.setAMDName %}'modules/{{ name }}',{% endif %}[
 
 function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ %}, Mixins{% endif %}){
 
-	var {{ name|capitalize }} = {{ options.appname }}.module();
+	var {{ name|upperCamel }} = {{ options.appname }}.module();
 
-	{{ name|capitalize }}.Model = Backbone.Model.extend({% if _mix_ %}_.extend({},
+	{{ name|upperCamel }}.Model = Backbone.Model.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
@@ -19,16 +19,16 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		defaults: {}
 	}{% if _mix_ %}){% endif %});
 
-	{{ name|capitalize }}.Collection = Backbone.Collection.extend({% if _mix_ %}_.extend({},
+	{{ name|upperCamel }}.Collection = Backbone.Collection.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
 		// collection properties {% else %}{{'{'}}{% endif %}
 		url: '',
-		model: {{ name|capitalize }}.Model
+		model: {{ name|upperCamel }}.Model
 	}{% if _mix_ %}){% endif %});
 
-	{{ name|capitalize }}.Views.ModelView = Backbone.View.extend({% if _mix_ %}_.extend({},
+	{{ name|upperCamel }}.Views.ModelView = Backbone.View.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
@@ -40,13 +40,13 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		}
 	}{% if _mix_ %}){% endif %});
 
-	{{ name|capitalize }}.Views.CollectionView = Backbone.View.extend({% if _mix_ %}_.extend({},
+	{{ name|upperCamel }}.Views.CollectionView = Backbone.View.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
 		// view properties {% else %}{{'{'}}{% endif %}
 		initialize: function(options) {
-			this. .on('reset',this.render,this);
+			this.collection.on('reset',this.render,this);
 			this.collection.on('add',this.add,this);
 		},
 		render: function() {
@@ -55,5 +55,5 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		add: function(model) {}
 	}{% if _mix_ %}){% endif %});
 
-	return {{ name|capitalize }};
+	return {{ name|upperCamel }};
 });

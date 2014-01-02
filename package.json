@@ -1,7 +1,7 @@
 {
   "name": "grunt-bbamd_generate",
   "description": "Backbone AMD generator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/jmanuelrp/bb-amd-generator",
   "author": {
     "name": "JManuel Ruiz",
@@ -30,7 +30,8 @@
   "dependencies": {
     "path": "0.4.9",
     "swig": "1.1.0",
-    "pluralize": "0.0.5"
+    "pluralize": "0.0.5",
+    "morph":"0.2.0"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",
@@ -42,6 +43,6 @@
     "grunt": "~0.4.1"
   },
   "keywords": [
-    "gruntplugin","backbone","require.js","amd"
+    "gruntplugin","backbone","require.js","amd","generator"
   ]
 }

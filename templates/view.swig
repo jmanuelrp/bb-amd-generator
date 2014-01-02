@@ -8,7 +8,7 @@ define({% if options.setAMDName %}'views/{{ name }}',{% endif %}[
 
 function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ %}, Mixins{% endif %}){
 
-	var {{ name|capitalize }}View = Backbone.View.extend({% if _mix_ %}_.extend({},
+	var {{ name|upperCamel }}View = Backbone.View.extend({% if _mix_ %}_.extend({},
 		// mixins
 		/* Mixins.Name, */ {
 
@@ -20,5 +20,5 @@ function({{ options.appname }}{% if _mix_ %}, _{% endif %}, Backbone{% if _mix_ 
 		}
 	}{% if _mix_ %}){% endif %});
 
-	return {{ name|capitalize }}View;
+	return {{ name|upperCamel }}View;
 });
