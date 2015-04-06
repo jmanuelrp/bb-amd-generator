@@ -1,5 +1,4 @@
-{% set app = options.appname %}{% set mix = options.mixins %}{% set classname = name|classify %}
-define({% if options.setAMDName %}'models/{{ name }}', {% endif %}[{% if app %}
+define({% if amd %}'views/{{ name }}', {% endif %}[{% if app %}
 	'{{ app }}',{% endif %}
 	'underscore',
 	'backbone'{% if mix %},

@@ -1,1 +1,1 @@
-<h2>{{ name|humanize }}</h2>
+<h2>{{ name|titleize }}</h2>
