@@ -43,46 +43,41 @@ grunt.initConfig({
 
 ### Options
 
-#### options.app
+#### options.appname
 Type: `String`
-Default value: `'app'`
+Default value: `null`
 
-A string value that is used to...
+Application name.
 
 #### options.source
 Type: `String`
 Default value: `'js/backbone'`
 
-A string value that is used to...
+Directory that will contain the generated files.
 
 #### options.mixins
 Type: `Boolean`
 Default value: `false`
 
-A boolean value that is used to...
+[Learn about Mixins](http://ricostacruz.com/backbone-patterns/#mixins)
 
 #### options.setAMDName
 Type: `Boolean`
 Default value: `false`
 
-A boolean value that is used to...
+Specifies the module name to Require.js
 
 ### Usage Examples
 
+Generate AMD modules with Mixins and a explicit name
+
 ```js
-grunt.initConfig({
-  bbamd_generate: {
-    options: {
-      mixins     : true,
-      setAMDName : true
-    },
-    module:{},
-    router:{},
-    view:{},
-    collection:{},
-    model:{},
-    template:{}
-  },
+  // ...
+  options: {
+    mixins: true,
+    setAMDName: true
+  }
+  // ...
 })
 ```
 
@@ -90,72 +85,99 @@ grunt.initConfig({
 grunt bbamd_generate:module:post
 ```
 
-```js
+Output:
 
-define('modules/post',[
-  'app',
-  'underscore',
-  'backbone',
-  'mixins'
+```js
+define('modules/post', [
+	'underscore',
+	'backbone',
+	'mixins'
 ],
 
-function(app, _, Backbone, Mixins){
+function (_, Backbone, Mixins) {
 
-  var Post = app.module();
+	var Post = { Views: {} };
 
-  Post.Model = Backbone.Model.extend(_.extend({},
-    // mixins
-    /* Mixins.Name, */ {
+	Post.Model = Backbone.Model.extend(_.extend({},
+		// mixins
+		/*Mixins.Name,*/ {
 
-    // model properties 
-    urlRoot: '',
-    defaults: {}
-  }));
+		// model properties
+		defaults: {}
+	}));
 
-  Post.Collection = Backbone.Collection.extend(_.extend({},
-    // mixins
-    /* Mixins.Name, */ {
+	Post.Collection = Backbone.Collection.extend(_.extend({},
+		// mixins
+		/*Mixins.Name,*/ {
 
-    // collection properties 
-    url: '',
-    model: Post.Model
-  }));
+		// collection properties
+		url: '',
 
-  Post.Views.ModelView = Backbone.View.extend(_.extend({},
-    // mixins
-    /* Mixins.Name, */ {
+		model: Post.Model
+	})));
 
-    // view properties 
-    events: {},
-    initialize: function() {},
-    render: function() {
-      return this;
-    }
-  }));
+	Post.Views.ModelView = Backbone.View.extend(_.extend({},
+		// mixins
+		/*Mixins.Name,*/ {
 
-  Post.Views.CollectionView = Backbone.View.extend(_.extend({},
-    // mixins
-    /* Mixins.Name, */ {
+		// view properties
+		events: {
+		},
 
-    // view properties 
-    initialize: function(options) {
-      this.collection.on('reset',this.render,this);
-      this.collection.on('add',this.add,this);
-    },
-    render: function() {
-      return this;
-    },
-    add: function(model) {}
-  }));
+		initialize: function(options) {
+			this.listenTo(this.model, 'destroy', this.remove);
+			this.listenTo(this.model, 'change', this.render);
+		},
 
-  return Post;
+		render: function() {
+			return this;
+		}
+	}));
+
+	Post.Views.CollectionView = Backbone.View.extend(_.extend({},
+		// mixins
+		/*Mixins.Name,*/ {
+
+		// view properties
+		events: {
+		},
+
+		initialize: function(options) {
+			this.listenTo(this.collection, 'add', this.add);
+			this.listenTo(this.collection, 'reset', this.render);
+		},
+
+		render: function() {
+			this.$el.empty();
+
+			this.collection.each(this.add, this);
+
+			return this;
+		},
+
+		add: function(model) {
+			var child = new Post.Views.ModelView({
+				model: model
+			});
+
+			child.render().$el.appendTo(this.$el);
+		}
+	}));
+
+	return Post;
 });
-
 ```
 
+## Bash alias
 
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+```shell
+alias gen='noglob gruntGenerate'
+gruntGenerate() {
+  grunt bbamd_generate:$1:$2
+}
+```
+
+`gen model post` is equals to `grunt bbamd_generate:model:post`
 
 ## Release History
 _(Nothing yet)_
