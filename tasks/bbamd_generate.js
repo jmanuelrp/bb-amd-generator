@@ -8,20 +8,36 @@
 
 'use strict';
 
-var path      = require('path'     );
-var swig      = require('swig'     );
-var pluralize = require('pluralize');
-var morph     = require('morph');
+var path      = require('path');
+var swig      = require('swig');
+var inflected = require('inflected');
 
-swig.setFilter('upperCamel', function(input) {
-  return morph.toUpperCamel(input);
+swig.setFilter('classify', function (input) {
+  return inflected.classify(input);
 });
 
-module.exports = function(grunt) {
+swig.setFilter('singularize', function (input) {
+  return inflected.singularize(input);
+});
 
-  grunt.registerMultiTask('bbamd_generate', 'Backbone AMD generator.', function( name ) {
+swig.setFilter('pluralize', function (input) {
+  return inflected.pluralize(input);
+});
 
-    var options = this.options({ source: 'js/backbone', mixins: false, setAMDName: true });
+swig.setFilter('titleize', function (input) {
+  return inflected.titleize(input);
+});
+
+module.exports = function (grunt) {
+
+  grunt.registerMultiTask('bbamd_generate', 'Backbone AMD generator.', function ( name ) {
+
+    var options = this.options({
+      appname: null,
+      source: 'js/backbone',
+      mixins: false,
+      setAMDName: false
+    });
 
     var elements = (function() {
       var elements = [
@@ -62,7 +78,7 @@ module.exports = function(grunt) {
     var ElementCreator = function (el, options) {
       var template, tplpath;
 
-      tplpath  = path.join(__dirname,'../templates', el.tplname);
+      tplpath = path.join(__dirname, '..', 'templates', 'javascript', el.tplname);
       template = grunt.file.read( tplpath );
 
       return {
@@ -76,20 +92,21 @@ module.exports = function(grunt) {
 
           filepath = path.join(
             options.source,
-            pluralize(el.name),
-            name+el.extension
+            inflected.pluralize(el.name),
+            (el.name==='collection'?inflected.pluralize(name):name)+el.extension
           );
 
           if( grunt.file.exists(filepath) ){
             grunt.fail.warn('File already exists ('+ filepath +').');
           }
-
-          data = {
-            name: name,
-            options: options
-          };
  
-          content = swig.render(template, { locals:data });
+          content = swig.render(template, { locals: {
+            app: options.appname,
+            mix: options.mixins,
+            amd: options.setAMDName,
+            name: name,
+            classname: inflected.classify(name)
+          }});
 
           grunt.file.write(filepath, content);
 
