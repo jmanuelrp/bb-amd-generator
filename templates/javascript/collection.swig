@@ -1,4 +1,4 @@
-define({% if amd %}'collections/{{ name|pluralize }}', {% endif %}[{% if app %}
+define({% if amd %}'collections/{{ pathfile }}', {% endif %}[{% if app %}
 	'{{ app }}',{% endif %}
 	'underscore',
 	'backbone',{% if mix %}

@@ -1,4 +1,4 @@
-define({% if amd %}'views/{{ name }}', {% endif %}[{% if app %}
+define({% if amd %}'views/{{ pathfile }}', {% endif %}[{% if app %}
 	'{{ app }}',{% endif %}
 	'underscore',
 	'backbone'{% if mix %},

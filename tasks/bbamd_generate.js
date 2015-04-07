@@ -36,7 +36,8 @@ module.exports = function (grunt) {
       appname: null,
       source: 'js/backbone',
       mixins: false,
-      setAMDName: false
+      setAMDName: false,
+      tplExtension: '.html'
     });
 
     var elements = (function() {
@@ -46,7 +47,7 @@ module.exports = function (grunt) {
         { tplname: 'collection.swig' ,extension: '.js'   ,name: 'collection' },
         { tplname: 'router.swig'     ,extension: '.js'   ,name: 'router'     },
         { tplname: 'module.swig'     ,extension: '.js'   ,name: 'module'     },
-        { tplname: 'template.swig'   ,extension: '.swig' ,name: 'template'   }
+        { tplname: 'template.swig'   ,extension: '.html' ,name: 'template'   }
       ];
 
       var _get = function(name) {
@@ -67,7 +68,7 @@ module.exports = function (grunt) {
 
       return {
         has: function(name) {
-          return (_get(name)!==null)? true : false;
+          return _get(name) !== null;
         },
         get: function(name) {
           return _get(name);
@@ -82,21 +83,28 @@ module.exports = function (grunt) {
       template = grunt.file.read( tplpath );
 
       return {
-        make: function( name ) {
-          var filepath, content, message, data;
+        make: function (fullname) {
+          var filepath, content, message, data, filename, extension, folders, name, _path;
 
-          if( typeof name === 'undefined' ){
+          if( typeof fullname === 'undefined' )
+          {
             grunt.fail.warn('The name has not been specified.');
-            name = 'name';
+            fullname = 'name';
           }
 
-          filepath = path.join(
-            options.source,
-            inflected.pluralize(el.name),
-            (el.name==='collection'?inflected.pluralize(name):name)+el.extension
-          );
+          folders = fullname.split('.');
+          name = folders.pop();
 
-          if( grunt.file.exists(filepath) ){
+          filename = el.name === 'collection' ? inflected.pluralize(name) : name;
+          extension = el.name === 'template' ? options.tplExtension : el.extension;
+
+          _path = [options.source, inflected.pluralize(el.name)];
+          _path = _path.concat(folders, [filename + extension]);
+
+          filepath = path.join.apply(path, _path);
+
+          if( grunt.file.exists(filepath) )
+          {
             grunt.fail.warn('File already exists ('+ filepath +').');
           }
  
@@ -104,6 +112,7 @@ module.exports = function (grunt) {
             app: options.appname,
             mix: options.mixins,
             amd: options.setAMDName,
+            pathfile: folders.concat([filename]).join(path.sep),
             name: name,
             classname: inflected.classify(name)
           }});

@@ -1,4 +1,4 @@
-define({% if amd %}'routers/{{ name }}', {% endif %}[{% if app %}
+define({% if amd %}'routers/{{ pathfile }}', {% endif %}[{% if app %}
 	'{{ app }}',{% endif %}
 	'underscore',
 	'backbone'

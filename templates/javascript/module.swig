@@ -1,4 +1,4 @@
-define({% if amd %}'modules/{{ name }}', {% endif %}[{% if app %}
+define({% if amd %}'modules/{{ pathfile }}', {% endif %}[{% if app %}
 	'{{ app }}',{% endif %}
 	'underscore',
 	'backbone'{% if mix %},
