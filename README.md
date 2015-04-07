@@ -173,7 +173,7 @@ function (_, Backbone, Mixins) {
 ```shell
 alias gen='noglob gruntGenerate'
 gruntGenerate() {
-  grunt bbamd_generate:$1:$2
+  grunt bbamd_generate:$1:$2 $3
 }
 ```
 
