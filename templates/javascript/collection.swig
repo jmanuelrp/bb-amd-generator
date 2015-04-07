@@ -16,7 +16,7 @@ function ({% if _app_ %}{{ _app_ }}, {% endif %}_, Backbone{% if mix %}, Mixins{
 		url: '',
 
 		model: {{ classname }}Model
-	}{% if mix %}){% endif %}));
+	}{% if mix %}){% endif %});
 
 	return {{ classname }}Collection;
 });

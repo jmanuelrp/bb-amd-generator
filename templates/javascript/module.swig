@@ -25,7 +25,7 @@ function ({% if app %}{{ app }}, {% endif %}_, Backbone{% if mix %}, Mixins{% en
 		url: '',
 
 		model: {{ classname }}.Model
-	}{% if mix %}){% endif %}));
+	}{% if mix %}){% endif %});
 
 	{{ classname }}.Views.ModelView = Backbone.View.extend({% if mix %}_.extend({},
 		// mixins
