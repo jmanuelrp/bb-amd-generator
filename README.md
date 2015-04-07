@@ -67,6 +67,28 @@ Default value: `false`
 
 Specifies the module name to Require.js
 
+#### `new` options.tplExtension
+Type: `String`
+Default value: `.html`
+
+The template extension
+
+### Command structure
+
+Two parameters are needed, the element to create and the name of that element
+
+`grunt bbamd_generate:`**ElementType**`:`**ElementName**
+
+You can create the fallowing items:
+  * Models: `model`
+  * Collections: `collection`
+  * Views: `view`
+  * Routers: `router`
+  * Modules: `module`
+  * Templates: `template`
+
+The name can contain `.` to specify the parent folder
+
 ### Usage Examples
 
 Generate AMD modules with Mixins and a explicit name
@@ -82,13 +104,13 @@ Generate AMD modules with Mixins and a explicit name
 ```
 
 ```shell
-grunt bbamd_generate:module:post
+grunt bbamd_generate:module:user.post
 ```
 
 Output:
 
 ```js
-define('modules/post', [
+define('modules/user/post', [
 	'underscore',
 	'backbone',
 	'mixins'
@@ -180,4 +202,21 @@ gruntGenerate() {
 `gen model post` is equals to `grunt bbamd_generate:model:post`
 
 ## Release History
-_(Nothing yet)_
+
+`0.1.3`
+  * Customizable file extension for templates
+  * Namespaces on file name to define folder hierarchy
+  * Bug fix
+
+`0.1.2`
+  * Classify names
+  * Use of `this.listenTo` instead of `this.on`
+  * Pre-build `add` method on collection view
+  * Explicit statement module, `app.module()` => `{ Views: {} }`
+  * `setAMDName` option preset to `false`
+
+`0.1.1`
+  * Upper CamelCase names
+  * Suffixes for each element
+
+`0.1.0` First release
