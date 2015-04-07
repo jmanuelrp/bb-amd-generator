@@ -136,7 +136,7 @@ function (_, Backbone, Mixins) {
 		url: '',
 
 		model: Post.Model
-	})));
+	}));
 
 	Post.Views.ModelView = Backbone.View.extend(_.extend({},
 		// mixins
