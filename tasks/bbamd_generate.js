@@ -84,7 +84,7 @@ module.exports = function (grunt) {
 
       return {
         make: function (fullname) {
-          var filepath, content, message, data, filename, extension, folders, name, _path;
+          var filepath, content, message, data, filename, extension, names, pfolder, folders, name, _path;
 
           if( typeof fullname === 'undefined' )
           {
@@ -92,13 +92,21 @@ module.exports = function (grunt) {
             fullname = 'name';
           }
 
-          folders = fullname.split('.');
+          names = fullname.split(',');
+          folders = names[0].split('.');
           name = folders.pop();
+          pfolder = names.length > 1 ? names[1] : null;
 
           filename = el.name === 'collection' ? inflected.pluralize(name) : name;
           extension = el.name === 'template' ? options.tplExtension : el.extension;
 
           _path = [options.source, inflected.pluralize(el.name)];
+
+          if (pfolder)
+          {
+            _path.splice(_path.length - 1, 0, pfolder);
+          }
+
           _path = _path.concat(folders, [filename + extension]);
 
           filepath = path.join.apply(path, _path);
