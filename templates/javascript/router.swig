@@ -12,9 +12,9 @@ function ({% if app %}{{ app }}, {% endif %}_, Backbone) {
 			"" :  "index"
 		},
 
-		initialize : function() {},
+		initialize : function () {},
 
-		index: function() {}
+		index: function () {}
 	});
 
 	return {{ classname }}Router;

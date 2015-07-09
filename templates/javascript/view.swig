@@ -15,12 +15,12 @@ function ({% if app %}{{ app }}, {% endif %}_, Backbone{% if mix %}, Mixins{% en
 		events: {
 		},
 
-		initialize: function(options) {
+		initialize: function (options) {
 			// this.listenTo(this.model, 'destroy', this.remove);
 			// this.listenTo(this.model, 'change', this.render);
 		},
 
-		render: function() {
+		render: function () {
 			return this;
 		}
 	}{% if mix %}){% endif %});

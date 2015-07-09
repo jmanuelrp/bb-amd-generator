@@ -35,12 +35,12 @@ function ({% if app %}{{ app }}, {% endif %}_, Backbone{% if mix %}, Mixins{% en
 		events: {
 		},
 
-		initialize: function(options) {
+		initialize: function (options) {
 			this.listenTo(this.model, 'destroy', this.remove);
 			this.listenTo(this.model, 'change', this.render);
 		},
 
-		render: function() {
+		render: function () {
 			return this;
 		}
 	}{% if mix %}){% endif %});
@@ -53,12 +53,12 @@ function ({% if app %}{{ app }}, {% endif %}_, Backbone{% if mix %}, Mixins{% en
 		events: {
 		},
 
-		initialize: function(options) {
+		initialize: function (options) {
 			this.listenTo(this.collection, 'add', this.add);
 			this.listenTo(this.collection, 'reset', this.render);
 		},
 
-		render: function() {
+		render: function () {
 			this.$el.empty();
 
 			this.collection.each(this.add, this);
@@ -66,7 +66,7 @@ function ({% if app %}{{ app }}, {% endif %}_, Backbone{% if mix %}, Mixins{% en
 			return this;
 		},
 
-		add: function(model) {
+		add: function (model) {
 			var child = new {{ classname }}.Views.ModelView({
 				model: model
 			});
