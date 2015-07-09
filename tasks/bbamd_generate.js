@@ -92,7 +92,7 @@ module.exports = function (grunt) {
             fullname = 'name';
           }
 
-          names = fullname.split(',');
+          names = fullname.split('@');
           folders = names[0].split('.');
           name = folders.pop();
           pfolder = names.length > 1 ? names[1] : null;
@@ -115,7 +115,7 @@ module.exports = function (grunt) {
           {
             grunt.fail.warn('File already exists ('+ filepath +').');
           }
- 
+
           content = swig.render(template, { locals: {
             app: options.appname,
             mix: options.mixins,
