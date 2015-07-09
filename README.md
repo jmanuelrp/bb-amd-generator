@@ -203,6 +203,10 @@ gruntGenerate() {
 
 ## Release History
 
+`0.1.4`
+  * Modular folders
+  * Bug fix
+
 `0.1.3`
   * Customizable file extension for templates
   * Namespaces on file name to define folder hierarchy

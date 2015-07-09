@@ -1,7 +1,7 @@
 {
   "name": "grunt-bbamd_generate",
   "description": "Backbone AMD generator",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "homepage": "https://github.com/jmanuelrp/bb-amd-generator",
   "author": {
     "name": "JManuel Ruiz",
