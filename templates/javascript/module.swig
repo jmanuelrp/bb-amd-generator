@@ -1,79 +1,110 @@
-define({% if amd %}'modules/{{ pathfile }}', {% endif %}[{% if app %}
-	'{{ app }}',{% endif %}
+{% set _plural_name = name|pluralize %}define({% if amd %}'modules/{{ pathfile }}', {% endif %}[
+	'msgBus',
 	'underscore',
-	'backbone'{% if mix %},
-	'mixins'{% endif %}
+	'core/app'
 ],
 
-function ({% if app %}{{ app }}, {% endif %}_, Backbone{% if mix %}, Mixins{% endif %}) {
+function (bus, _, App) {
 
 	var {{ classname }} = { Views: {} };
 
-	{{ classname }}.Model = Backbone.Model.extend({% if mix %}_.extend({},
-		// mixins
-		/*Mixins.Name,*/ {
+	{{ classname }}.Model = App.Model.extend({
+		{% if depname %}urlRoot: function () {
+			return this.{{ depname }}.url() + '/{{ _plural_name }}';
+		},{% else %}urlRoot: '/api/{{ _plural_name }}',{% endif %}
 
-		// model properties{% else %}{{'{'}}{% endif %}
-		defaults: {}
-	}{% if mix %}){% endif %});
+		resolver: {
+			name: '{{ name }}'
+		}{% if depname %},
 
-	{{ classname }}.Collection = Backbone.Collection.extend({% if mix %}_.extend({},
-		// mixins
-		/*Mixins.Name,*/ {
+		initialize: function (attrs, options) {
+			this.{{ depname }} = options.{{ depname }};
+		}{% endif %}
+	});
 
-		// collection properties{% else %}{{'{'}}{% endif %}
-		url: '',
-
-		model: {{ classname }}.Model
-	}{% if mix %}){% endif %});
-
-	{{ classname }}.Views.ModelView = Backbone.View.extend({% if mix %}_.extend({},
-		// mixins
-		/*Mixins.Name,*/ {
-
-		// view properties{% else %}{{'{'}}{% endif %}
-		events: {
+	{{ classname }}.Collection = App.Collection.extend({
+		{% if depname %}url: function () {
+			return this.{{ depname }}.url() + '/{{ _plural_name }}';
 		},
 
-		initialize: function (options) {
-			this.listenTo(this.model, 'destroy', this.remove);
-			this.listenTo(this.model, 'change', this.render);
+		model: function (attrs, options) {
+			return new {{ classname }}.Model(attrs, {
+				{{ depname }}: options.collection.{{ depname }}
+			});
 		},
 
-		render: function () {
-			return this;
+		initialize: function (models, options) {
+			this.{{ depname }} = options.{{ depname }};
+		},{% else %}url: '/api/{{ _plural_name }}',
+
+		model: {{ classname }}.Model{% endif %}
+	});
+
+	{{ classname }}.Views.ModelView = App.ItemView.extend({
+		behaviors: {
+			Editable: {
+				template: {
+					show: '{{ section }}::{{ name }}Item',
+					edit: '{{ section }}::{{ name }}ItemForm'
+				}
+			},
+			Deletable: {
+				content: function (model) {
+					return '¿Desea eliminar <b>' + model.get('nombre') + '</b>?';
+				}
+			},
+			Row: {}
 		}
-	}{% if mix %}){% endif %});
+	});
 
-	{{ classname }}.Views.CollectionView = Backbone.View.extend({% if mix %}_.extend({},
-		// mixins
-		/*Mixins.Name,*/ {
+	{{ classname }}.Views.FormView = App.ItemView.extend({
+		template: '{{ section }}::{{ name }}ItemForm',
 
-		// view properties{% else %}{{'{'}}{% endif %}
-		events: {
+		behaviors: {
+			Form: {
+				model: {{ classname }}.Model{% if depname %},
+				options: function () {
+					return {
+						{{ depname }}: this.{{ depname }}
+					};
+				}{% endif %}
+			}
+		}{% if depname %},
+
+		initialize: function (options) {
+			this.{{ depname }} = options.{{ depname }};
+		}{% endif %}
+	});
+
+	{{ classname }}.Views.CollectionView = App.CollectionView.extend({
+		childView: {{ classname }}.Views.ModelView
+	});
+
+	{{ classname }}.Views.CollectionPanel = App.CollectionPanelView.extend({
+		template: '{{ section }}::{{ name }}Layout',
+
+		behaviors: {
+			Reloadable: {
+				collection: '{{ _plural_name }}'
+			}
 		},
 
 		initialize: function (options) {
-			this.listenTo(this.collection, 'add', this.add);
-			this.listenTo(this.collection, 'reset', this.render);
-		},
+			this.{{ _plural_name }} = options.{{ _plural_name }};{% if depname %}
+			this.{{ depname }} = options.{{ depname }};{% endif %}
 
-		render: function () {
-			this.$el.empty();
-
-			this.collection.each(this.add, this);
-
-			return this;
-		},
-
-		add: function (model) {
-			var child = new {{ classname }}.Views.ModelView({
-				model: model
+			this.collectionView = new {{ classname }}.Views.CollectionView({
+				collection: this.{{ _plural_name }}{% if depname %},
+				{{ depname }}: this.{{ depname }}{% endif %}
 			});
 
-			child.render().$el.appendTo(this.$el);
+			this.formView = new {{ classname }}.Views.FormView({% if depname %}{
+				{{ depname }}: this.{{ depname }}
+			}{% endif %});
+
+			this.listenFormView();
 		}
-	}{% if mix %}){% endif %});
+	});
 
 	return {{ classname }};
 });

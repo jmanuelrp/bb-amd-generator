@@ -30,7 +30,7 @@ swig.setFilter('titleize', function (input) {
 
 module.exports = function (grunt) {
 
-  grunt.registerMultiTask('bbamd_generate', 'Backbone AMD generator.', function ( name ) {
+  grunt.registerMultiTask('bbamd_generate', 'Backbone AMD generator.', function ( gname ) {
 
     var options = this.options({
       appname: null,
@@ -42,12 +42,15 @@ module.exports = function (grunt) {
 
     var elements = (function() {
       var elements = [
-        { tplname: 'view.swig'       ,extension: '.js'   ,name: 'view'       },
-        { tplname: 'model.swig'      ,extension: '.js'   ,name: 'model'      },
-        { tplname: 'collection.swig' ,extension: '.js'   ,name: 'collection' },
-        { tplname: 'router.swig'     ,extension: '.js'   ,name: 'router'     },
-        { tplname: 'module.swig'     ,extension: '.js'   ,name: 'module'     },
-        { tplname: 'template.swig'   ,extension: '.html' ,name: 'template'   }
+        { tplname: 'view.swig'       ,extension: '.js'   ,name: 'view'       ,type: 'view'       },
+        { tplname: 'model.swig'      ,extension: '.js'   ,name: 'model'      ,type: 'model'      },
+        { tplname: 'collection.swig' ,extension: '.js'   ,name: 'collection' ,type: 'collection' },
+        { tplname: 'router.swig'     ,extension: '.js'   ,name: 'router'     ,type: 'router'     },
+        { tplname: 'module.swig'     ,extension: '.js'   ,name: 'module'     ,type: 'module'     },
+        { tplname: 'template.swig'   ,extension: '.html' ,name: 'template'   ,type: 'template'   },
+        { tplname: 'item.swig'       ,extension: '.html' ,name: 'item'       ,type: 'template'   },
+        { tplname: 'itemForm.swig'   ,extension: '.html' ,name: 'itemForm'   ,type: 'template'   },
+        { tplname: 'layout.swig'     ,extension: '.html' ,name: 'layout'     ,type: 'template'   }
       ];
 
       var _get = function(name) {
@@ -76,6 +79,24 @@ module.exports = function (grunt) {
       };
     })();
 
+	function splitNames(fullname) {
+		var names, _pfolder, pfolder, depname, folders, name;
+
+		names = fullname.split('@');
+		folders = names[0].split('.');
+		name = folders.pop();
+		_pfolder = names.length > 1 ? names[1].split(',') : null;
+		pfolder = _pfolder ? _pfolder.shift() : null;
+		depname = _pfolder ? _pfolder.pop() : null;
+
+		return {
+			name: name,
+			folders: folders,
+			section: pfolder,
+			depname: depname
+		};
+	}
+
     var ElementCreator = function (el, options) {
       var template, tplpath;
 
@@ -83,31 +104,33 @@ module.exports = function (grunt) {
       template = grunt.file.read( tplpath );
 
       return {
-        make: function (fullname) {
-          var filepath, content, message, data, filename, extension, names, pfolder, folders, name, _path;
+        make: function (names) {
+          var filepath, content, message, data, filename, extension,  _path;
 
-          if( typeof fullname === 'undefined' )
+          if( typeof names.name === 'undefined' )
           {
             grunt.fail.warn('The name has not been specified.');
-            fullname = 'name';
+            names.name = 'name';
           }
 
-          names = fullname.split('@');
-          folders = names[0].split('.');
-          name = folders.pop();
-          pfolder = names.length > 1 ? names[1] : null;
+        //   names = fullname.split('@');
+        //   folders = names[0].split('.');
+        //   name = folders.pop();
+        //   _pfolder = names.length > 1 ? names[1].split(',') : null;
+		//   pfolder = _pfolder ? _pfolder.shift() : null;
+		//   depname = _pfolder ? _pfolder.pop() : null;
 
-          filename = el.name === 'collection' ? inflected.pluralize(name) : name;
-          extension = el.name === 'template' ? options.tplExtension : el.extension;
+          filename = el.type === 'collection' ? inflected.pluralize(names.name) : names.name;
+          extension = el.type === 'template' ? options.tplExtension : el.extension;
 
-          _path = [options.source, inflected.pluralize(el.name)];
+          _path = [options.source, inflected.pluralize(el.type)];
 
-          if (pfolder)
+          if (names.section)
           {
-            _path.splice(_path.length - 1, 0, pfolder);
+            _path.splice(_path.length - 1, 0, names.section);
           }
 
-          _path = _path.concat(folders, [filename + extension]);
+          _path = _path.concat(names.folders, [filename + extension]);
 
           filepath = path.join.apply(path, _path);
 
@@ -116,26 +139,46 @@ module.exports = function (grunt) {
             grunt.fail.warn('File already exists ('+ filepath +').');
           }
 
-          content = swig.render(template, { locals: {
-            app: options.appname,
-            mix: options.mixins,
-            amd: options.setAMDName,
-            pathfile: folders.concat([filename]).join(path.sep),
-            name: name,
-            classname: inflected.classify(name)
-          }});
+		  if (el.type !== 'template') {
+			  content = swig.render(template, { locals: {
+				  app: options.appname,
+				  mix: options.mixins,
+				  amd: options.setAMDName,
+				  pathfile: names.folders.concat([filename]).join(path.sep),
+				  name: names.name,
+				  depname: names.depname,
+				  section: names.section,
+				  classname: inflected.classify(names.name)
+			  }});
+		  }
+		  else {
+		  	content = template;
+		  }
 
           grunt.file.write(filepath, content);
 
-          message = 'Great! '+ name +' '+ el.name +' has been created ('+ filepath +').';
+          message = 'Great! '+ names.name +' '+ el.type +' has been created ('+ filepath +').';
           grunt.log.writeln(message);
 
         }
       };
     };
 
-    var f = new ElementCreator(elements.get(this.target), options);
-    f.make( name );
+    var f = new ElementCreator(elements.get(this.target), options),
+		split_names = splitNames(gname);
+
+	f.make(split_names);
+
+	if (this.target === 'module') {
+		var base_name = split_names.name;
+
+		['item', 'itemForm', 'layout'].forEach(function (item, pep) {
+			split_names.name = base_name + inflected.classify(item);
+
+			(new ElementCreator(elements.get(item), options)).make(split_names);
+		});
+	}
+
   });
 
 };
