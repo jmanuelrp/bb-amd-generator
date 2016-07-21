@@ -1,1 +1,1 @@
-<h2>{{ name|titleize }}</h2>
+<h2>View Template</h2>

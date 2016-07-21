@@ -1,29 +1,19 @@
-define({% if amd %}'views/{{ pathfile }}', {% endif %}[{% if app %}
-	'{{ app }}',{% endif %}
+define({% if amd %}'modules/{{ pathfile }}', {% endif %}[
+	'msgBus',
 	'underscore',
-	'backbone'{% if mix %},
-	'mixins'{% endif %}
+	'core/app'
 ],
 
-function ({% if app %}{{ app }}, {% endif %}_, Backbone{% if mix %}, Mixins{% endif %}) {
+function (bus, _, App) {
 
-	var {{ classname }}View = Backbone.View.extend({% if mix %}_.extend({},
-		// mixins
-		/*Mixins.Name,*/ {
+	var {{ classname }}View = App.LayoutView.extend({
+		template: '{{ section }}::{{ name }}View',
 
-		// view properties{% else %}{{'{'}}{% endif %}
-		events: {
-		},
-
-		initialize: function (options) {
-			// this.listenTo(this.model, 'destroy', this.remove);
-			// this.listenTo(this.model, 'change', this.render);
-		},
-
-		render: function () {
-			return this;
+		initialize: function (options) {{'{'}}{% if depname %}
+			this.{{ depname }} = options.{{ depname }};{% endif %}
+			// code...
 		}
-	}{% if mix %}){% endif %});
+	});
 
 	return {{ classname }}View;
 });

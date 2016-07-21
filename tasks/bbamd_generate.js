@@ -172,12 +172,17 @@ module.exports = function (grunt) {
 	if (this.target === 'module') {
 		var base_name = split_names.name;
 
-		['item', 'itemForm', 'layout'].forEach(function (item, pep) {
+		['item', 'itemForm', 'layout'].forEach(function (item) {
 			split_names.name = base_name + inflected.classify(item);
 
 			(new ElementCreator(elements.get(item), options)).make(split_names);
 		});
 	}
+	// else if (this.target === 'view') {
+	// 	split_names.name += 'View';
+	//
+	// 	(new ElementCreator(elements.get('template'), options)).make(split_names);
+	// }
 
   });
 

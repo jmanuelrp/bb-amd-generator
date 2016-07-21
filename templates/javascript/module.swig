@@ -80,12 +80,19 @@ function (bus, _, App) {
 		childView: {{ classname }}.Views.ModelView
 	});
 
-	{{ classname }}.Views.CollectionPanel = App.CollectionPanelView.extend({
+	{{ classname }}.Views.CollectionLayout = App.CollectionLayoutView.extend({
 		template: '{{ section }}::{{ name }}Layout',
 
 		behaviors: {
+			Creationable: {
+				collection: '{{ _plural_name }}'
+			},
 			Reloadable: {
 				collection: '{{ _plural_name }}'
+			},
+			Pagination: {
+				source: '{{ _plural_name }}',
+				output: '_{{ _plural_name }}'
 			}
 		},
 
@@ -94,15 +101,13 @@ function (bus, _, App) {
 			this.{{ depname }} = options.{{ depname }};{% endif %}
 
 			this.collectionView = new {{ classname }}.Views.CollectionView({
-				collection: this.{{ _plural_name }}{% if depname %},
+				collection: this._{{ _plural_name }}{% if depname %},
 				{{ depname }}: this.{{ depname }}{% endif %}
 			});
 
 			this.formView = new {{ classname }}.Views.FormView({% if depname %}{
 				{{ depname }}: this.{{ depname }}
 			}{% endif %});
-
-			this.listenFormView();
 		}
 	});
 
