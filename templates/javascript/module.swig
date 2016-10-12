@@ -14,12 +14,14 @@ function (bus, _, App) {
 		},{% else %}urlRoot: '/api/{{ _plural_name }}',{% endif %}
 
 		resolver: {
-			name: '{{ name }}'
-		}{% if depname %},
+			name: '{{ name }}'{% if depname %},
+			dependency: '{{ section }}/modules/{{ depname }}@Model',
+			dependency_name: '{{ depname }}'
+		},
 
 		initialize: function (attrs, options) {
-			this.{{ depname }} = options.{{ depname }};
-		}{% endif %}
+			this.{{ depname }} = options.{{ depname }};{% endif %}
+		}
 	});
 
 	{{ classname }}.Collection = App.Collection.extend({
@@ -35,7 +37,7 @@ function (bus, _, App) {
 
 		initialize: function (models, options) {
 			this.{{ depname }} = options.{{ depname }};
-		},{% else %}url: '/api/{{ _plural_name }}',
+		}{% else %}url: '/api/{{ _plural_name }}',
 
 		model: {{ classname }}.Model{% endif %}
 	});
@@ -90,9 +92,13 @@ function (bus, _, App) {
 			Reloadable: {
 				collection: '{{ _plural_name }}'
 			},
-			Pagination: {
+			Filterable: {
 				source: '{{ _plural_name }}',
-				output: '_{{ _plural_name }}'
+				output: '_{{ _plural_name }}',
+				filters: []
+			},
+			Pagination: {
+				source: '_{{ _plural_name }}'
 			}
 		},
 
