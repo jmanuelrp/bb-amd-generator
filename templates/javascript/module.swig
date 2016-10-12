@@ -98,7 +98,8 @@ function (bus, _, App) {
 				filters: []
 			},
 			Pagination: {
-				source: '_{{ _plural_name }}'
+				source: '_{{ _plural_name }}',
+				items_name: {{ _plural_name }}
 			}
 		},
 
