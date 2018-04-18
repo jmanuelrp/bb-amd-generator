@@ -42,23 +42,6 @@ function (bus, _, App) {
 		model: {{ classname }}.Model{% endif %}
 	});
 
-	{{ classname }}.Views.ModelView = App.ItemView.extend({
-		behaviors: {
-			Editable: {
-				template: {
-					show: '{{ section }}::{{ name }}Item',
-					edit: '{{ section }}::{{ name }}ItemForm'
-				}
-			},
-			Deletable: {
-				content: function (model) {
-					return '¿Desea eliminar <b>' + model.get('nombre') + '</b>?';
-				}
-			},
-			Row: {}
-		}
-	});
-
 	{{ classname }}.Views.FormView = App.ItemView.extend({
 		template: '{{ section }}::{{ name }}ItemForm',
 
@@ -70,12 +53,31 @@ function (bus, _, App) {
 						{{ depname }}: this.{{ depname }}
 					};
 				}{% endif %}
-			}
+			},
+			MaterialForm: {}
 		}{% if depname %},
 
 		initialize: function (options) {
 			this.{{ depname }} = options.{{ depname }};
 		}{% endif %}
+	});
+
+	{{ classname }}.Views.ModelView = App.ItemView.extend({
+		template: '{{ section }}::{{ name }}Item',
+
+		className: 'list-group-item media',
+
+		behaviors: {
+			FormModal: {
+				title: 'Editar',
+				FormView: {{ classname }}.Views.FormView
+			},
+			Deletable: {
+				content: function (model) {
+					return '¿Desea eliminar <b>' + model.get('nombre') + '</b>?';
+				}
+			}
+		}
 	});
 
 	{{ classname }}.Views.CollectionView = App.CollectionView.extend({
@@ -87,7 +89,8 @@ function (bus, _, App) {
 
 		behaviors: {
 			Creationable: {
-				collection: '{{ _plural_name }}'
+				collection: '{{ _plural_name }}',
+				modal: true
 			},
 			Reloadable: {
 				collection: '{{ _plural_name }}'
@@ -99,7 +102,7 @@ function (bus, _, App) {
 			},
 			Pagination: {
 				source: '_{{ _plural_name }}',
-				items_name: {{ _plural_name }}
+				items_name: '{{ _plural_name }}'
 			}
 		},
 
@@ -115,7 +118,13 @@ function (bus, _, App) {
 			this.formView = new {{ classname }}.Views.FormView({% if depname %}{
 				{{ depname }}: this.{{ depname }}
 			}{% endif %});
-		}
+		}{% if depname %},
+
+		serializeData: function () {
+			return {
+				{{ depname }}: this.{{ depname }}.toJSON()
+			};
+		}{% endif %}
 	});
 
 	return {{ classname }};
