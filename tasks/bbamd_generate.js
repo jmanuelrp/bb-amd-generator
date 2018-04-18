@@ -46,6 +46,7 @@ module.exports = function (grunt) {
         { tplname: 'model.swig'      ,extension: '.js'   ,name: 'model'      ,type: 'model'      },
         { tplname: 'collection.swig' ,extension: '.js'   ,name: 'collection' ,type: 'collection' },
         { tplname: 'router.swig'     ,extension: '.js'   ,name: 'router'     ,type: 'router'     },
+        { tplname: 'controller.swig' ,extension: '.js'   ,name: 'controller' ,type: 'controller' },
         { tplname: 'module.swig'     ,extension: '.js'   ,name: 'module'     ,type: 'module'     },
         { tplname: 'template.swig'   ,extension: '.html' ,name: 'template'   ,type: 'template'   },
         { tplname: 'item.swig'       ,extension: '.html' ,name: 'item'       ,type: 'template'   },
@@ -79,23 +80,23 @@ module.exports = function (grunt) {
       };
     })();
 
-	function splitNames(fullname) {
-		var names, _pfolder, pfolder, depname, folders, name;
+    function splitNames(fullname) {
+      var names, _pfolder, pfolder, depname, folders, name;
 
-		names = fullname.split('@');
-		folders = names[0].split('.');
-		name = folders.pop();
-		_pfolder = names.length > 1 ? names[1].split(',') : null;
-		pfolder = _pfolder ? _pfolder.shift() : null;
-		depname = _pfolder ? _pfolder.pop() : null;
+      names = fullname.split('@');
+      folders = names[0].split('.');
+      name = folders.pop();
+      _pfolder = names.length > 1 ? names[1].split(',') : null;
+      pfolder = _pfolder ? _pfolder.shift() : null;
+      depname = _pfolder ? _pfolder.pop() : null;
 
-		return {
-			name: name,
-			folders: folders,
-			section: pfolder,
-			depname: depname
-		};
-	}
+      return {
+        name: name,
+        folders: folders,
+        section: pfolder,
+        depname: depname
+      };
+    }
 
     var ElementCreator = function (el, options) {
       var template, tplpath;
@@ -113,13 +114,6 @@ module.exports = function (grunt) {
             names.name = 'name';
           }
 
-        //   names = fullname.split('@');
-        //   folders = names[0].split('.');
-        //   name = folders.pop();
-        //   _pfolder = names.length > 1 ? names[1].split(',') : null;
-		//   pfolder = _pfolder ? _pfolder.shift() : null;
-		//   depname = _pfolder ? _pfolder.pop() : null;
-
           filename = el.type === 'collection' ? inflected.pluralize(names.name) : names.name;
           extension = el.type === 'template' ? options.tplExtension : el.extension;
 
@@ -128,6 +122,10 @@ module.exports = function (grunt) {
           if (names.section)
           {
             _path.splice(_path.length - 1, 0, names.section);
+          }
+
+          if (names.omit_group_folder) {
+            _path.pop();
           }
 
           _path = _path.concat(names.folders, [filename + extension]);
@@ -139,51 +137,58 @@ module.exports = function (grunt) {
             grunt.fail.warn('File already exists ('+ filepath +').');
           }
 
-		  if (el.type !== 'template') {
-			  content = swig.render(template, { locals: {
-				  app: options.appname,
-				  mix: options.mixins,
-				  amd: options.setAMDName,
-				  pathfile: names.folders.concat([filename]).join(path.sep),
-				  name: names.name,
-				  depname: names.depname,
-				  section: names.section,
-				  classname: inflected.classify(names.name)
-			  }});
-		  }
-		  else {
-		  	content = template;
-		  }
+          if (el.type !== 'template') {
+            content = swig.render(template, { locals: {
+              app: options.appname,
+              mix: options.mixins,
+              amd: options.setAMDName,
+              pathfile: names.folders.concat([filename]).join(path.sep),
+              name: names.name,
+              depname: names.depname,
+              section: names.section,
+              classname: inflected.classify(names.name)
+            }});
+          }
+          else {
+            content = template;
+          }
 
           grunt.file.write(filepath, content);
 
           message = 'Great! '+ names.name +' '+ el.type +' has been created ('+ filepath +').';
           grunt.log.writeln(message);
-
         }
       };
     };
 
     var f = new ElementCreator(elements.get(this.target), options),
-		split_names = splitNames(gname);
+    split_names = splitNames(gname);
 
-	f.make(split_names);
+    if (split_names.section && !grunt.file.isDir(options.source, split_names.section)) {
+      ['router', 'controller'].forEach(function (item) {
+        (new ElementCreator(elements.get(item), options)).make({
+          name: item,
+          folders: [],
+          section: split_names.section,
+          depname: split_names.depname,
+          omit_group_folder: true
+        });
+      });
+    }
 
-	if (this.target === 'module') {
-		var base_name = split_names.name;
+    f.make(split_names);
 
-		['item', 'itemForm', 'layout'].forEach(function (item) {
-			split_names.name = base_name + inflected.classify(item);
+    if (this.target === 'module') {
+      var base_name = split_names.name;
 
-			(new ElementCreator(elements.get(item), options)).make(split_names);
-		});
-	}
-	// else if (this.target === 'view') {
-	// 	split_names.name += 'View';
-	//
-	// 	(new ElementCreator(elements.get('template'), options)).make(split_names);
-	// }
+      ['item', 'itemForm', 'layout'].forEach(function (item) {
+        split_names.name = base_name + inflected.classify(item);
 
-  });
+        (new ElementCreator(elements.get(item), options)).make(split_names);
+      });
+    }
 
-};
+
+  }); // END TASK
+
+}; // END EXPORT
