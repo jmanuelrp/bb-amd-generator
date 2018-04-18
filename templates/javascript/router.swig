@@ -1,21 +1,24 @@
-define({% if amd %}'routers/{{ pathfile }}', {% endif %}[{% if app %}
-	'{{ app }}',{% endif %}
+{% set _plural_name = name|pluralize %}define({% if amd %}'modules/{{ pathfile }}', {% endif %}[
+	'msgBus',
 	'underscore',
-	'backbone'
+	'marionette',
+	'{{ section }}/controller'
 ],
 
-function ({% if app %}{{ app }}, {% endif %}_, Backbone) {
+function (bus, _, Marionette, Controller) {
 
-	var {{ classname }}Router = Backbone.Router.extend({
+	var Router = Marionette.AppRouter.extend({
 
-		routes: {
-			"" :  "index"
-		},
+		appRoutes: {
+		}
 
-		initialize : function () {},
-
-		index: function () {}
 	});
 
-	return {{ classname }}Router;
+	bus.commands.setHandler('router:start:{{ section }}', function () {
+		new Router({
+			controller: new Controller()
+		});
+	});
+
+	return Router;
 });
