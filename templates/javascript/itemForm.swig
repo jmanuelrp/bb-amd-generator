@@ -1,14 +1,10 @@
-{% extends "../../core/templates/rowPanelEdit.swig" %}
-
-{% block content %}
-	<form role="form" class="pieel-form">
-		<div class="col-md-4 form-group">
-			<label class="control-label">
-				Nombre
-			</label>
-			<div class="">
-				<input type="text" name="nombre" value="" class="form-control" placeholder="Nombre"/>
+<form class="media-body form-horizontal" role="form">
+	<div class="form-group">
+		<label class="col-sm-3 control-label">Nombre</label>
+		<div class="col-sm-9">
+			<div class="fg-line">
+				<input type="text" name="nombre" value="{{ nombre }}" class="form-control" placeholder="Nombre...">
 			</div>
 		</div>
-	</form>
-{% endblock %}
+	</div>
+</form>

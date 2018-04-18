@@ -1,22 +1,14 @@
-{% extends "../../core/templates/rowPanel.swig" %}
-
-{% block titles %}
-	<div class="col-xs-4">
-		{{ nombre }}
-	</div>
-{% endblock %}
-
-{% block title %}
-	<div class="col-xs-12">
-		<b>{{ nombre }}</b>
-	</div>
-{% endblock %}
+{% extends "../../core/templates/cardListItem.swig" %}
 
 {% block content %}
-	<div class="visible-xs-block">
-		<h5>Nombre</h5>
-		<p>{{ nombre }}</p>
+	<div class="col-sm-4 hidden-xs">
+		{{ nombre }}
 	</div>
-	<h5>Atributo</h5>
-	<p>{{ atributo|default('--') }}</p>
+
+	<div class="visible-xs">
+		<div class="lgi-heading">
+			{{ nombre }}
+		</div>
+		<div class="lgi-text"></div>
+	</div>
 {% endblock %}
