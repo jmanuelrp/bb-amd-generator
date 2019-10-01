@@ -42,6 +42,8 @@ module.exports = function (grunt) {
 
     var elements = (function() {
       var elements = [
+        { tplname: 'selector.swig'   ,extension: '.js'   ,name: 'selector'   ,type: 'selector'   },
+        { tplname: 'sltmodal.swig'   ,extension: '.js'   ,name: 'sltmodal'   ,type: 'selector'   },
         { tplname: 'view.swig'       ,extension: '.js'   ,name: 'view'       ,type: 'view'       },
         { tplname: 'model.swig'      ,extension: '.js'   ,name: 'model'      ,type: 'model'      },
         { tplname: 'collection.swig' ,extension: '.js'   ,name: 'collection' ,type: 'collection' },
@@ -51,7 +53,8 @@ module.exports = function (grunt) {
         { tplname: 'template.swig'   ,extension: '.html' ,name: 'template'   ,type: 'template'   },
         { tplname: 'item.swig'       ,extension: '.html' ,name: 'item'       ,type: 'template'   },
         { tplname: 'itemForm.swig'   ,extension: '.html' ,name: 'itemForm'   ,type: 'template'   },
-        { tplname: 'layout.swig'     ,extension: '.html' ,name: 'layout'     ,type: 'template'   }
+        { tplname: 'layout.swig'     ,extension: '.html' ,name: 'layout'     ,type: 'template'   },
+        { tplname: 'sltItem.swig'    ,extension: '.html' ,name: 'sltItem'    ,type: 'template'   }
       ];
 
       var _get = function(name) {
@@ -113,8 +116,14 @@ module.exports = function (grunt) {
             grunt.fail.warn('The name has not been specified.');
             names.name = 'name';
           }
+          grunt.log.writeln(JSON.stringify(el));
 
           filename = el.type === 'collection' ? inflected.pluralize(names.name) : names.name;
+          grunt.log.writeln(filename);
+
+          filename = el.tplname === 'sltmodal.swig' ? names.name+'Modal' : filename;
+          grunt.log.writeln(filename);
+
           extension = el.type === 'template' ? options.tplExtension : el.extension;
 
           _path = [options.source, inflected.pluralize(el.type)];
@@ -146,7 +155,9 @@ module.exports = function (grunt) {
               name: names.name,
               depname: names.depname,
               section: names.section,
-              classname: inflected.classify(names.name)
+              classname: inflected.classify(names.name),
+              pluralname: inflected.pluralize(names.name),
+              pluralclassname: inflected.classify(inflected.pluralize(names.name))
             }});
           }
           else {
@@ -186,6 +197,16 @@ module.exports = function (grunt) {
 
         (new ElementCreator(elements.get(item), options)).make(split_names);
       });
+    }
+
+    if (this.target === 'selector') {
+      var base_name = split_names.name;
+
+      (new ElementCreator(elements.get('sltmodal'), options)).make(split_names);
+
+      split_names.name = base_name + inflected.classify('sltItem');
+      split_names.folders.push('selectors');
+      (new ElementCreator(elements.get('sltItem'), options)).make(split_names);
     }
 
 
