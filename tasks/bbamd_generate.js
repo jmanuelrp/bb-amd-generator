@@ -116,13 +116,9 @@ module.exports = function (grunt) {
             grunt.fail.warn('The name has not been specified.');
             names.name = 'name';
           }
-          grunt.log.writeln(JSON.stringify(el));
 
           filename = el.type === 'collection' ? inflected.pluralize(names.name) : names.name;
-          grunt.log.writeln(filename);
-
           filename = el.tplname === 'sltmodal.swig' ? names.name+'Modal' : filename;
-          grunt.log.writeln(filename);
 
           extension = el.type === 'template' ? options.tplExtension : el.extension;
 
