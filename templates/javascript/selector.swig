@@ -1,10 +1,11 @@
 define({% if amd %}'modules/{{ pathfile }}', {% endif %}[
 	'msgBus',
+	'underscore',
 	'core/app',
 	'selector'
 ],
 
-function (bus, _, Selector) {
+function (bus, _, App, Selector) {
 
 	var {{ classname }}Collection = App.Collection.extend({
 		url: '/api/{{ pluralname }}',
