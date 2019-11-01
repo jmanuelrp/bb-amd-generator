@@ -7,7 +7,7 @@ define({% if amd %}'modules/{{ pathfile }}', {% endif %}[
 function (bus, _, App) {
 
 	var {{ classname }}View = App.LayoutView.extend({
-		template: '{{ section }}::{{ name }}View',
+		template: '{{ section }}::{{ name }}',
 
 		initialize: function (options) {{'{'}}{% if depname %}
 			this.{{ depname }} = options.{{ depname }};{% endif %}
